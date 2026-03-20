@@ -1,9 +1,11 @@
 ﻿import type { Metadata } from "next";
 import "./globals.css";
+import { AppProvider } from "@/context/app-context";
+import { Toast } from "@/components/toast";
 
 export const metadata: Metadata = {
-  title: "HourSafe AI - Income Protection Dashboard",
-  description: "A modern income protection dashboard for gig workers.",
+  title: "HourSafe AI",
+  description: "Protecting gig workers by insuring lost working hours.",
 };
 
 export default function RootLayout({
@@ -13,7 +15,12 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body>{children}</body>
+      <body>
+        <AppProvider>
+          {children}
+          <Toast />
+        </AppProvider>
+      </body>
     </html>
   );
 }

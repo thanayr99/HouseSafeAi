@@ -1,204 +1,154 @@
-﻿'use client';
+﻿"use client";
 
-import { startTransition, useState } from 'react';
+import Link from "next/link";
+import { motion } from "framer-motion";
+import { ArrowRight, CloudRain, ShieldCheck, Zap } from "lucide-react";
+import { Button } from "@/components/button";
+import { Card } from "@/components/card";
+import { Navbar } from "@/components/navbar";
+import { PageTransition } from "@/components/page-transition";
 
-type RiskLevel = 'Low' | 'High';
+const features = [
+  {
+    title: "AI Risk Detection",
+    description:
+      "Monitor weather-driven disruption signals and identify earnings volatility before it spikes.",
+    icon: ShieldCheck,
+  },
+  {
+    title: "Lost Hours Tracking",
+    description:
+      "See hour-by-hour disruption impact with instant visibility into protected time lost.",
+    icon: CloudRain,
+  },
+  {
+    title: "Instant Payout System",
+    description:
+      "Trigger automated claims and estimate compensation in a startup-grade control surface.",
+    icon: Zap,
+  },
+];
 
-type DashboardState = {
-  currentHours: number;
-  risk: RiskLevel;
-};
-
-const defaultProfile = {
-  name: 'Ravi',
-  platform: 'Swiggy',
-  normalHours: 10,
-  hourlyIncome: 100,
-};
-
-function formatCurrency(amount: number) {
-  return new Intl.NumberFormat('en-IN', {
-    style: 'currency',
-    currency: 'INR',
-    maximumFractionDigits: 0,
-  }).format(amount);
-}
-
-function MetricCard({
-  label,
-  value,
-  accent,
-}: {
-  label: string;
-  value: string;
-  accent?: string;
-}) {
+export default function HomePage() {
   return (
-    <div className="rounded-3xl border border-slate-200/70 bg-white/90 p-5 shadow-panel backdrop-blur">
-      <p className="text-xs font-semibold uppercase tracking-[0.24em] text-slate-500">
-        {label}
-      </p>
-      <p className={`mt-3 text-3xl font-semibold text-slate-950 ${accent ?? ''}`}>
-        {value}
-      </p>
-    </div>
-  );
-}
-
-export default function Home() {
-  const [dashboard, setDashboard] = useState<DashboardState>({
-    currentHours: defaultProfile.normalHours,
-    risk: 'Low',
-  });
-
-  const lostHours = Math.max(defaultProfile.normalHours - dashboard.currentHours, 0);
-  const loss = lostHours * defaultProfile.hourlyIncome;
-  const payout = loss * 0.7;
-  const hasEventBeenSimulated = dashboard.currentHours !== defaultProfile.normalHours;
-  const riskStyles =
-    dashboard.risk === 'High'
-      ? 'border-red-200 bg-red-50 text-red-700'
-      : 'border-emerald-200 bg-emerald-50 text-emerald-700';
-
-  const simulateRainEvent = () => {
-    startTransition(() => {
-      setDashboard({
-        currentHours: 3,
-        risk: 'High',
-      });
-    });
-  };
-
-  return (
-    <main className="min-h-screen bg-[radial-gradient(circle_at_top,_rgba(56,189,248,0.2),_transparent_30%),linear-gradient(135deg,_#f8fafc_0%,_#dbeafe_45%,_#f8fafc_100%)] px-4 py-8 text-slate-900 sm:px-6 lg:px-8">
-      <div className="mx-auto flex w-full max-w-6xl flex-col gap-8">
-        <header className="relative overflow-hidden rounded-[32px] border border-white/60 bg-slate-950 px-6 py-8 text-white shadow-panel sm:px-8">
-          <div className="pointer-events-none absolute inset-y-0 right-0 hidden w-1/3 bg-[radial-gradient(circle_at_center,_rgba(125,211,252,0.28),_transparent_60%)] lg:block" />
-          <div className="relative flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between">
-            <div className="max-w-2xl">
-              <p className="text-sm font-semibold uppercase tracking-[0.3em] text-sky-200">
-                Income Protection
-              </p>
-              <h1 className="mt-3 text-3xl font-semibold leading-tight sm:text-4xl">
-                HourSafe AI - Income Protection Dashboard
-              </h1>
-              <p className="mt-3 max-w-xl text-sm text-slate-300 sm:text-base">
-                A clean operating view for gig workers to estimate lost hours,
-                forecast compensation, and understand disruption risk quickly.
-              </p>
-            </div>
-
-            <div
-              className={`inline-flex items-center gap-3 rounded-full border px-4 py-3 text-sm font-semibold ${riskStyles}`}
-            >
-              <span className="inline-block h-2.5 w-2.5 rounded-full bg-current" />
-              Risk Indicator: {dashboard.risk}
-            </div>
-          </div>
-        </header>
-
-        <section className="grid gap-6 lg:grid-cols-[1.2fr_0.8fr]">
-          <div className="rounded-[32px] border border-slate-200/80 bg-white/85 p-6 shadow-panel backdrop-blur sm:p-8">
-            <div className="flex flex-col gap-5 border-b border-slate-200 pb-6 sm:flex-row sm:items-center sm:justify-between">
-              <div>
-                <p className="text-sm font-semibold uppercase tracking-[0.2em] text-slate-500">
-                  User Card
-                </p>
-                <h2 className="mt-2 text-2xl font-semibold text-slate-950">
-                  {defaultProfile.name}
-                </h2>
-                <p className="mt-1 text-base text-slate-600">
-                  Platform: {defaultProfile.platform}
-                </p>
-              </div>
-
-              <button
-                type="button"
-                onClick={simulateRainEvent}
-                className="inline-flex items-center justify-center rounded-full bg-slate-950 px-5 py-3 text-sm font-semibold text-white transition duration-200 hover:-translate-y-0.5 hover:bg-sky-600 focus:outline-none focus:ring-2 focus:ring-sky-400 focus:ring-offset-2"
+    <>
+      <Navbar />
+      <PageTransition>
+        <main className="relative overflow-hidden">
+          <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_top_left,_rgba(139,92,246,0.35),_transparent_30%),radial-gradient(circle_at_top_right,_rgba(56,189,248,0.18),_transparent_28%),linear-gradient(180deg,_rgba(2,6,23,0.95),_rgba(15,23,42,1))]" />
+          <section className="relative mx-auto max-w-7xl px-4 pb-24 pt-20 sm:px-6 lg:px-8">
+            <div className="grid items-center gap-12 lg:grid-cols-[1.1fr_0.9fr]">
+              <motion.div
+                initial={{ opacity: 0, y: 24 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.6 }}
               >
-                Simulate Rain Event 🌧️
-              </button>
+                <div className="inline-flex rounded-full border border-cyan-400/20 bg-cyan-400/10 px-4 py-2 text-xs uppercase tracking-[0.32em] text-cyan-200">
+                  Built for gig worker protection
+                </div>
+                <h1 className="mt-8 max-w-3xl text-5xl font-semibold leading-tight text-white sm:text-6xl">
+                  HourSafe AI
+                </h1>
+                <p className="mt-6 max-w-2xl text-lg leading-8 text-slate-300">
+                  Protecting Gig Workers by Insuring Lost Working Hours
+                </p>
+                <p className="mt-4 max-w-2xl text-base leading-7 text-slate-400">
+                  A polished operating system for weather-driven income protection,
+                  automated claims, and real-time visibility into work disruption.
+                </p>
+                <div className="mt-10 flex flex-wrap gap-4">
+                  <Link href="/login">
+                    <Button className="min-w-[10rem]">
+                      Get Started
+                      <ArrowRight className="h-4 w-4" />
+                    </Button>
+                  </Link>
+                  <Link href="/login">
+                    <Button variant="secondary" className="min-w-[10rem]">
+                      Explore Demo
+                    </Button>
+                  </Link>
+                </div>
+              </motion.div>
+
+              <motion.div
+                initial={{ opacity: 0, scale: 0.96 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ duration: 0.6, delay: 0.15 }}
+              >
+                <Card className="overflow-hidden p-0">
+                  <div className="border-b border-white/10 bg-gradient-to-r from-violet-500/20 via-fuchsia-500/10 to-cyan-500/20 p-6">
+                    <div className="flex items-center justify-between">
+                      <div>
+                        <p className="text-sm text-slate-300">Live signal</p>
+                        <h2 className="mt-2 text-2xl font-semibold text-white">
+                          Rain disruption detected
+                        </h2>
+                      </div>
+                      <div className="rounded-full border border-rose-400/20 bg-rose-400/10 px-3 py-1 text-sm text-rose-200">
+                        High risk
+                      </div>
+                    </div>
+                  </div>
+                  <div className="grid gap-4 p-6 sm:grid-cols-2">
+                    <div className="rounded-2xl border border-white/10 bg-white/5 p-4">
+                      <p className="text-sm text-slate-400">Estimated payout</p>
+                      <p className="mt-3 text-3xl font-semibold text-emerald-300">
+                        ₹490
+                      </p>
+                    </div>
+                    <div className="rounded-2xl border border-white/10 bg-white/5 p-4">
+                      <p className="text-sm text-slate-400">Hours protected</p>
+                      <p className="mt-3 text-3xl font-semibold text-white">7 hrs</p>
+                    </div>
+                    <div className="rounded-2xl border border-white/10 bg-white/5 p-4 sm:col-span-2">
+                      <div className="flex items-end justify-between gap-4">
+                        {["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"].map(
+                          (day, index) => (
+                            <div key={day} className="flex flex-1 flex-col items-center gap-3">
+                              <div
+                                className="w-full rounded-full bg-gradient-to-t from-violet-500 to-cyan-400"
+                                style={{
+                                  height: `${[88, 95, 92, 84, 76, 40, 35][index]}px`,
+                                }}
+                              />
+                              <span className="text-xs text-slate-500">{day}</span>
+                            </div>
+                          ),
+                        )}
+                      </div>
+                    </div>
+                  </div>
+                </Card>
+              </motion.div>
             </div>
+          </section>
 
-            <div className="mt-6 grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
-              <MetricCard
-                label="Normal Working Hours"
-                value={`${defaultProfile.normalHours} hrs`}
-              />
-              <MetricCard
-                label="Current Working Hours"
-                value={`${dashboard.currentHours} hrs`}
-              />
-              <MetricCard
-                label="Hourly Income"
-                value={formatCurrency(defaultProfile.hourlyIncome)}
-              />
-              <MetricCard
-                label="Lost Hours"
-                value={`${lostHours} hrs`}
-                accent={lostHours > 0 ? 'text-red-600' : 'text-slate-950'}
-              />
-              <MetricCard
-                label="Estimated Income Loss"
-                value={formatCurrency(loss)}
-                accent={loss > 0 ? 'text-amber-600' : 'text-slate-950'}
-              />
-              <MetricCard
-                label="Estimated Payout"
-                value={formatCurrency(payout)}
-                accent={payout > 0 ? 'text-emerald-600' : 'text-slate-950'}
-              />
+          <section className="relative mx-auto max-w-7xl px-4 pb-24 sm:px-6 lg:px-8">
+            <div className="grid gap-6 md:grid-cols-3">
+              {features.map(({ title, description, icon: Icon }, index) => (
+                <motion.div
+                  key={title}
+                  initial={{ opacity: 0, y: 24 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.5, delay: 0.1 * (index + 1) }}
+                >
+                  <Card className="h-full">
+                    <div className="w-fit rounded-2xl border border-white/10 bg-white/10 p-3 text-cyan-200">
+                      <Icon className="h-5 w-5" />
+                    </div>
+                    <h3 className="mt-6 text-xl font-semibold text-white">{title}</h3>
+                    <p className="mt-3 text-sm leading-7 text-slate-400">
+                      {description}
+                    </p>
+                  </Card>
+                </motion.div>
+              ))}
             </div>
-          </div>
-
-          <aside className="rounded-[32px] border border-slate-200/80 bg-white/85 p-6 shadow-panel backdrop-blur sm:p-8">
-            <p className="text-sm font-semibold uppercase tracking-[0.2em] text-slate-500">
-              Coverage Snapshot
-            </p>
-            <h2 className="mt-2 text-2xl font-semibold text-slate-950">
-              Income protection estimate
-            </h2>
-            <p className="mt-3 text-sm leading-6 text-slate-600">
-              When working time drops because of weather disruption, HourSafe AI
-              estimates income loss and applies a 70% payout ratio.
-            </p>
-
-            <div className="mt-8 space-y-4">
-              <div className="rounded-3xl bg-sky-50 p-5">
-                <p className="text-sm font-medium text-slate-500">Formula</p>
-                <p className="mt-2 text-base font-semibold text-slate-950">
-                  Payout = (Normal Hours - Current Hours) x Hourly Income x 0.7
-                </p>
-              </div>
-
-              <div className="rounded-3xl bg-slate-950 p-5 text-white">
-                <p className="text-sm font-medium text-slate-300">
-                  Current estimate
-                </p>
-                <p className="mt-3 text-4xl font-semibold">
-                  {formatCurrency(payout)}
-                </p>
-                <p className="mt-2 text-sm text-slate-300">
-                  Based on {lostHours} lost hours at{' '}
-                  {formatCurrency(defaultProfile.hourlyIncome)} per hour.
-                </p>
-              </div>
-
-              <div className="rounded-3xl border border-slate-200 bg-slate-50 p-5">
-                <p className="text-sm font-medium text-slate-500">
-                  Event status
-                </p>
-                <p className="mt-2 text-base font-semibold text-slate-950">
-                  {hasEventBeenSimulated
-                    ? 'Rain disruption simulated. Protective payout updated.'
-                    : 'Normal operating day. Simulate disruption to preview protection.'}
-                </p>
-              </div>
-            </div>
-          </aside>
-        </section>
-      </div>
-    </main>
+          </section>
+        </main>
+      </PageTransition>
+    </>
   );
 }
+
